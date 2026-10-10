@@ -1,0 +1,616 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Transparencia Hídrica App</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        'water-blue': '#0ea5e9',
+                        'water-dark': '#0369a1',
+                        'water-light': '#e0f2fe',
+                        'alert-red': '#ef4444',
+                        'safe-green': '#22c55e',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f3f4f6;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            /* Evitar scroll en body para simular app */
+            overflow: hidden; 
+        }
+
+        /* Contenedor principal de la app, simulando la pantalla de un móvil */
+        #app-container {
+            width: 100%;
+            height: 100vh;
+            max-width: 480px; /* Tamaño máximo para tablets pequeñas o desktop */
+            background-color: #ffffff;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+        }
+
+        @media (min-width: 481px) {
+            #app-container {
+                height: 90vh;
+                max-height: 850px;
+                border-radius: 40px;
+                border: 8px solid #1f2937;
+            }
+        }
+
+        /* Área de contenido desplazable */
+        #content-area {
+            flex-grow: 1;
+            overflow-y: auto;
+            padding-bottom: 80px; /* Espacio para la barra de navegación inferior */
+            /* Ocultar barra de scroll para un look más "app" */
+            scrollbar-width: none; 
+            -ms-overflow-style: none;
+        }
+        #content-area::-webkit-scrollbar {
+            display: none;
+        }
+
+        /* Ocultar pantallas por defecto */
+        .screen {
+            display: none;
+            animation: fadeIn 0.3s ease-in-out;
+        }
+        
+        .screen.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Estilos del mapa simulado */
+        .map-placeholder {
+            background: url('https://placehold.co/800x600/e0f2fe/0ea5e9?text=Mapa+Interactivo+de+Calidad+del+Agua') center/cover no-repeat;
+            position: relative;
+        }
+
+        .map-marker {
+            position: absolute;
+            transform: translate(-50%, -100%);
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        .map-marker:hover {
+            transform: translate(-50%, -100%) scale(1.1);
+        }
+
+    </style>
+</head>
+<body>
+
+    <div id="app-container">
+        
+        <!-- Header Principal -->
+        <header class="bg-water-blue text-white p-4 shadow-md z-10 flex justify-between items-center">
+            <div class="flex items-center gap-2">
+                <i class="fa-solid fa-droplet text-xl"></i>
+                <h1 class="font-bold text-lg tracking-wide">Transparencia Hídrica</h1>
+            </div>
+            <button id="btn-notificaciones" class="relative p-2 rounded-full hover:bg-water-dark transition">
+                <i class="fa-regular fa-bell text-xl"></i>
+                <span class="absolute top-1 right-1 flex h-3 w-3">
+                  <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
+                  <span class="relative inline-flex rounded-full h-3 w-3 bg-red-500 border border-white"></span>
+                </span>
+            </button>
+        </header>
+
+        <!-- Área de Contenido -->
+        <div id="content-area" class="bg-gray-50">
+            
+            <section id="screen-home" class="screen active p-4">
+                
+                <!-- Resumen de estado de zona -->
+                <div class="bg-white rounded-2xl p-5 shadow-sm mb-6 border border-gray-100 relative overflow-hidden">
+                    <!-- Elemento decorativo de fondo -->
+                    <div class="absolute -right-4 -top-4 opacity-5">
+                        <i class="fa-solid fa-droplet text-9xl"></i>
+                    </div>
+                    
+                    <h2 class="text-gray-500 text-sm font-medium mb-1 uppercase tracking-wider">Tu Ubicación</h2>
+                    <div class="flex items-center gap-2 mb-4">
+                        <i class="fa-solid fa-location-dot text-water-blue"></i>
+                        <span class="font-semibold text-gray-800 text-lg">Guadalajara, Centro</span>
+                    </div>
+                    
+                    <div class="flex items-center gap-4 bg-green-50 p-4 rounded-xl border border-green-100">
+                        <div class="h-12 w-12 rounded-full bg-safe-green text-white flex items-center justify-center shadow-md">
+                            <i class="fa-solid fa-check text-2xl"></i>
+                        </div>
+                        <div>
+                            <p class="font-bold text-green-800 text-lg">Calidad Óptima</p>
+                            <p class="text-green-600 text-sm">Agua segura para uso general</p>
+                        </div>
+                    </div>
+
+                    <div class="mt-4 flex justify-between text-sm text-gray-500 border-t pt-4">
+                        <span class="flex items-center gap-1"><i class="fa-solid fa-vial"></i> Cloro: 1.2 mg/L</span>
+                        <span class="flex items-center gap-1"><i class="fa-solid fa-layer-group"></i> Turbidez: Baja</span>
+                    </div>
+                </div>
+
+                <!-- Accesos Rápidos -->
+                <h3 class="font-bold text-gray-800 mb-3 px-1 text-lg">Accesos Rápidos</h3>
+                <div class="grid grid-cols-2 gap-4 mb-6">
+                    <button onclick="navigate('report')" class="bg-white p-4 rounded-2xl shadow-sm border border-gray-100 flex flex-col items-center justify-center gap-3 hover:shadow-md transition group">
+                        <div class="h-14 w-14 rounded-full bg-red-50 text-alert-red flex items-center justify-center group-hover:scale-110 transition-transform">
+                            <i class="fa-solid fa-triangle-exclamation text-2xl"></i>
+                        </div>
+                        <span class="font-medium text-gray-700 text-sm text-center">Reportar<br>Incidencia</span>
+                    </button>
+                    
+                    <button onclick="navigate('map')" class="bg-white p-4 rounded-2xl shadow-sm border border-gray-100 flex flex-col items-center justify-center gap-3 hover:shadow-md transition group">
+                        <div class="h-14 w-14 rounded-full bg-blue-50 text-water-blue flex items-center justify-center group-hover:scale-110 transition-transform">
+                            <i class="fa-solid fa-map-location-dot text-2xl"></i>
+                        </div>
+                        <span class="font-medium text-gray-700 text-sm text-center">Mapa de<br>Calidad</span>
+                    </button>
+                    
+                    <button class="bg-white p-4 rounded-2xl shadow-sm border border-gray-100 flex flex-col items-center justify-center gap-3 hover:shadow-md transition group">
+                        <div class="h-14 w-14 rounded-full bg-orange-50 text-orange-500 flex items-center justify-center group-hover:scale-110 transition-transform">
+                            <i class="fa-solid fa-chart-line text-2xl"></i>
+                        </div>
+                        <span class="font-medium text-gray-700 text-sm text-center">Consumo<br>Histórico</span>
+                    </button>
+
+                    <button class="bg-white p-4 rounded-2xl shadow-sm border border-gray-100 flex flex-col items-center justify-center gap-3 hover:shadow-md transition group">
+                        <div class="h-14 w-14 rounded-full bg-purple-50 text-purple-500 flex items-center justify-center group-hover:scale-110 transition-transform">
+                            <i class="fa-solid fa-book-open-reader text-2xl"></i>
+                        </div>
+                        <span class="font-medium text-gray-700 text-sm text-center">Guías<br>Educativas</span>
+                    </button>
+                </div>
+
+                <!-- Últimas Alertas -->
+                <div class="flex justify-between items-end mb-3 px-1">
+                    <h3 class="font-bold text-gray-800 text-lg">Alertas Cercanas</h3>
+                    <a href="#" class="text-water-blue text-sm font-medium hover:underline">Ver todas</a>
+                </div>
+                <div class="flex flex-col gap-3">
+                    <div class="bg-white p-4 rounded-2xl shadow-sm border border-l-4 border-l-alert-red flex gap-4 items-start">
+                        <div class="bg-red-50 p-2 rounded-lg text-alert-red mt-1">
+                            <i class="fa-solid fa-water"></i>
+                        </div>
+                        <div>
+                            <h4 class="font-bold text-gray-800 text-sm">Fuga de Agua Potable</h4>
+                            <p class="text-gray-500 text-xs mb-1">Av. Juárez, esq. Federalismo</p>
+                            <p class="text-gray-400 text-xs"><i class="fa-regular fa-clock"></i> Reportado hace 2 horas</p>
+                        </div>
+                    </div>
+                    <div class="bg-white p-4 rounded-2xl shadow-sm border border-l-4 border-l-yellow-400 flex gap-4 items-start">
+                        <div class="bg-yellow-50 p-2 rounded-lg text-yellow-500 mt-1">
+                            <i class="fa-solid fa-wrench"></i>
+                        </div>
+                        <div>
+                            <h4 class="font-bold text-gray-800 text-sm">Mantenimiento Programado</h4>
+                            <p class="text-gray-500 text-xs mb-1">Corte temporal mañana 10:00 AM</p>
+                            <p class="text-gray-400 text-xs"><i class="fa-solid fa-location-dot"></i> Col. Americana</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="screen-map" class="screen h-full flex flex-col">
+                <div class="p-4 bg-white shadow-sm z-10 relative">
+                    <div class="relative">
+                        <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+                        <input type="text" placeholder="Buscar dirección o colonia..." class="w-full bg-gray-100 rounded-xl py-3 pl-10 pr-4 text-sm focus:outline-none focus:ring-2 focus:ring-water-blue transition">
+                    </div>
+                    
+                    <!-- Filtros rápidos -->
+                    <div class="flex gap-2 mt-3 overflow-x-auto pb-1 scrollbar-hide" style="scrollbar-width: none;">
+                        <button class="bg-water-blue text-white px-3 py-1.5 rounded-full text-xs font-medium whitespace-nowrap shadow-sm">Todos</button>
+                        <button class="bg-white border border-gray-200 text-gray-600 px-3 py-1.5 rounded-full text-xs font-medium whitespace-nowrap hover:bg-gray-50">Calidad</button>
+                        <button class="bg-white border border-gray-200 text-gray-600 px-3 py-1.5 rounded-full text-xs font-medium whitespace-nowrap hover:bg-gray-50">Fugas activas</button>
+                        <button class="bg-white border border-gray-200 text-gray-600 px-3 py-1.5 rounded-full text-xs font-medium whitespace-nowrap hover:bg-gray-50">Cortes</button>
+                    </div>
+                </div>
+                
+                <!-- Contenedor del Mapa (Simulado) -->
+                <div class="flex-grow map-placeholder relative">
+                    <!-- Marcadores de ejemplo -->
+                    <div class="map-marker text-safe-green text-3xl" style="top: 30%; left: 40%;" onclick="showMarkerInfo('Calidad Óptima', 'Col. Centro', 'safe')">
+                        <i class="fa-solid fa-location-dot drop-shadow-md"></i>
+                    </div>
+                    <div class="map-marker text-alert-red text-3xl" style="top: 50%; left: 60%;" onclick="showMarkerInfo('Fuga Reportada', 'Av. Chapultepec', 'alert')">
+                        <i class="fa-solid fa-location-dot drop-shadow-md"></i>
+                    </div>
+                    <div class="map-marker text-yellow-500 text-3xl" style="top: 70%; left: 30%;" onclick="showMarkerInfo('Mantenimiento', 'Col. Lafayette', 'warning')">
+                        <i class="fa-solid fa-location-dot drop-shadow-md"></i>
+                    </div>
+
+                    <!-- Botón de ubicación actual -->
+                    <button class="absolute bottom-6 right-4 bg-white h-12 w-12 rounded-full shadow-lg flex items-center justify-center text-water-blue text-xl hover:bg-gray-50">
+                        <i class="fa-solid fa-crosshairs"></i>
+                    </button>
+                </div>
+
+                <!-- Panel de información del marcador (oculto por defecto) -->
+                <div id="marker-info-panel" class="absolute bottom-20 left-0 right-0 bg-white rounded-t-3xl shadow-[0_-10px_15px_-3px_rgba(0,0,0,0.1)] p-5 transform translate-y-full transition-transform duration-300">
+                    <div class="w-12 h-1.5 bg-gray-300 rounded-full mx-auto mb-4"></div>
+                    <div class="flex justify-between items-start mb-2">
+                        <div>
+                            <h3 id="marker-title" class="font-bold text-gray-800 text-lg">Título</h3>
+                            <p id="marker-location" class="text-gray-500 text-sm">Ubicación</p>
+                        </div>
+                        <span id="marker-badge" class="px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider">Estado</span>
+                    </div>
+                    <p class="text-gray-600 text-sm mt-3 mb-4">Detalles adicionales sobre este punto de interés se mostrarán aquí.</p>
+                    <button class="w-full bg-water-blue text-white py-3 rounded-xl font-semibold shadow-md hover:bg-water-dark transition">Ver Detalles Completos</button>
+                </div>
+            </section>
+
+            <section id="screen-report" class="screen p-4">
+                <div class="mb-6">
+                    <h2 class="text-2xl font-bold text-gray-800">Nuevo Reporte</h2>
+                    <p class="text-gray-500 text-sm">Ayúdanos a mantener la red hídrica en óptimas condiciones.</p>
+                </div>
+
+                <form id="report-form" class="space-y-5" onsubmit="submitReport(event)">
+                    
+                    <!-- Tipo de Incidencia -->
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700 mb-2">Tipo de Incidencia *</label>
+                        <div class="grid grid-cols-2 gap-3">
+                            <label class="relative cursor-pointer">
+                                <input type="radio" name="incident_type" value="fuga" class="peer sr-only" required>
+                                <div class="p-3 border-2 border-gray-200 rounded-xl peer-checked:border-water-blue peer-checked:bg-water-light text-center transition">
+                                    <i class="fa-solid fa-water text-xl mb-1 text-gray-500 peer-checked:text-water-blue block"></i>
+                                    <span class="text-sm font-medium text-gray-600 peer-checked:text-water-blue">Fuga</span>
+                                </div>
+                            </label>
+                            <label class="relative cursor-pointer">
+                                <input type="radio" name="incident_type" value="calidad" class="peer sr-only">
+                                <div class="p-3 border-2 border-gray-200 rounded-xl peer-checked:border-water-blue peer-checked:bg-water-light text-center transition">
+                                    <i class="fa-solid fa-flask text-xl mb-1 text-gray-500 peer-checked:text-water-blue block"></i>
+                                    <span class="text-sm font-medium text-gray-600 peer-checked:text-water-blue">Mala Calidad</span>
+                                </div>
+                            </label>
+                            <label class="relative cursor-pointer">
+                                <input type="radio" name="incident_type" value="corte" class="peer sr-only">
+                                <div class="p-3 border-2 border-gray-200 rounded-xl peer-checked:border-water-blue peer-checked:bg-water-light text-center transition">
+                                    <i class="fa-solid fa-faucet-drip text-xl mb-1 text-gray-500 peer-checked:text-water-blue block"></i>
+                                    <span class="text-sm font-medium text-gray-600 peer-checked:text-water-blue">Sin Agua</span>
+                                </div>
+                            </label>
+                            <label class="relative cursor-pointer">
+                                <input type="radio" name="incident_type" value="otro" class="peer sr-only">
+                                <div class="p-3 border-2 border-gray-200 rounded-xl peer-checked:border-water-blue peer-checked:bg-water-light text-center transition">
+                                    <i class="fa-solid fa-ellipsis text-xl mb-1 text-gray-500 peer-checked:text-water-blue block"></i>
+                                    <span class="text-sm font-medium text-gray-600 peer-checked:text-water-blue">Otro</span>
+                                </div>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Ubicación -->
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700 mb-2">Ubicación *</label>
+                        <div class="relative">
+                            <i class="fa-solid fa-location-dot absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+                            <input type="text" placeholder="Dirección del problema..." required
+                                class="w-full bg-white border border-gray-300 rounded-xl py-3 pl-10 pr-4 text-sm focus:outline-none focus:ring-2 focus:ring-water-blue focus:border-transparent transition">
+                            <button type="button" class="absolute right-2 top-1/2 transform -translate-y-1/2 text-water-blue text-sm font-medium p-2">
+                                <i class="fa-solid fa-crosshairs"></i> Usar GPS
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Evidencia Fotográfica -->
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700 mb-2">Evidencia Fotográfica</label>
+                        <div class="border-2 border-dashed border-gray-300 rounded-xl p-6 text-center hover:bg-gray-50 transition cursor-pointer" onclick="document.getElementById('file-upload').click()">
+                            <i class="fa-solid fa-camera text-3xl text-gray-400 mb-2"></i>
+                            <p class="text-sm text-gray-500">Toca para tomar foto o subir archivo</p>
+                            <input id="file-upload" type="file" class="hidden" accept="image/*">
+                        </div>
+                    </div>
+
+                    <!-- Descripción -->
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700 mb-2">Descripción adicional</label>
+                        <textarea rows="3" placeholder="Detalles que ayuden a identificar el problema..." 
+                            class="w-full bg-white border border-gray-300 rounded-xl p-3 text-sm focus:outline-none focus:ring-2 focus:ring-water-blue focus:border-transparent transition resize-none"></textarea>
+                    </div>
+
+                    <!-- Botón Enviar -->
+                    <button type="submit" class="w-full bg-water-blue text-white py-4 rounded-xl font-bold shadow-md hover:bg-water-dark transition transform active:scale-95 flex justify-center items-center gap-2">
+                        <span>Enviar Reporte</span>
+                        <i class="fa-solid fa-paper-plane"></i>
+                    </button>
+                </form>
+            </section>
+
+            <section id="screen-profile" class="screen p-4">
+                
+                <!-- Encabezado Perfil -->
+                <div class="flex items-center gap-4 mb-8 bg-white p-5 rounded-2xl shadow-sm border border-gray-100">
+                    <div class="h-20 w-20 rounded-full bg-water-light border-4 border-white shadow-md flex justify-center items-center overflow-hidden">
+                        <i class="fa-solid fa-user text-3xl text-water-blue"></i>
+                    </div>
+                    <div>
+                        <h2 class="text-xl font-bold text-gray-800">Usuario Ciudadano</h2>
+                        <p class="text-gray-500 text-sm">ciudadano@ejemplo.com</p>
+                        <div class="mt-2 inline-flex items-center gap-1 bg-yellow-100 text-yellow-700 px-2 py-1 rounded-md text-xs font-bold">
+                            <i class="fa-solid fa-star"></i> Guardián del Agua Nivel 2
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Opciones -->
+                <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden mb-6">
+                    <a href="#" class="flex items-center justify-between p-4 border-b border-gray-50 hover:bg-gray-50 transition">
+                        <div class="flex items-center gap-3">
+                            <div class="h-8 w-8 rounded-full bg-blue-50 text-water-blue flex items-center justify-center"><i class="fa-solid fa-clock-rotate-left"></i></div>
+                            <span class="font-medium text-gray-700">Mis Reportes</span>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <span class="bg-gray-100 text-gray-600 px-2 py-0.5 rounded-full text-xs font-bold">3</span>
+                            <i class="fa-solid fa-chevron-right text-gray-400 text-sm"></i>
+                        </div>
+                    </a>
+                    <a href="#" class="flex items-center justify-between p-4 border-b border-gray-50 hover:bg-gray-50 transition">
+                        <div class="flex items-center gap-3">
+                            <div class="h-8 w-8 rounded-full bg-purple-50 text-purple-500 flex items-center justify-center"><i class="fa-solid fa-medal"></i></div>
+                            <span class="font-medium text-gray-700">Logros y Puntos</span>
+                        </div>
+                        <i class="fa-solid fa-chevron-right text-gray-400 text-sm"></i>
+                    </a>
+                    <a href="#" class="flex items-center justify-between p-4 border-b border-gray-50 hover:bg-gray-50 transition">
+                        <div class="flex items-center gap-3">
+                            <div class="h-8 w-8 rounded-full bg-gray-100 text-gray-600 flex items-center justify-center"><i class="fa-solid fa-gear"></i></div>
+                            <span class="font-medium text-gray-700">Configuración</span>
+                        </div>
+                        <i class="fa-solid fa-chevron-right text-gray-400 text-sm"></i>
+                    </a>
+                    <a href="#" class="flex items-center justify-between p-4 hover:bg-gray-50 transition">
+                        <div class="flex items-center gap-3">
+                            <div class="h-8 w-8 rounded-full bg-red-50 text-alert-red flex items-center justify-center"><i class="fa-solid fa-right-from-bracket"></i></div>
+                            <span class="font-medium text-alert-red">Cerrar Sesión</span>
+                        </div>
+                    </a>
+                </div>
+
+                <div class="text-center text-gray-400 text-xs">
+                    Transparencia Hídrica App v1.0
+                </div>
+
+            </section>
+
+        </div>
+
+        <nav class="bg-white border-t border-gray-200 absolute bottom-0 w-full pb-safe flex justify-around items-center px-2 py-3 z-20 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)]">
+            <button onclick="navigate('home')" id="nav-home" class="nav-btn active flex flex-col items-center gap-1 w-16 transition-colors">
+                <i class="fa-solid fa-house text-xl nav-icon text-water-blue"></i>
+                <span class="text-[10px] font-medium nav-text text-water-blue">Inicio</span>
+            </button>
+            <button onclick="navigate('map')" id="nav-map" class="nav-btn flex flex-col items-center gap-1 w-16 transition-colors">
+                <i class="fa-solid fa-map-location-dot text-xl nav-icon text-gray-400"></i>
+                <span class="text-[10px] font-medium nav-text text-gray-400">Mapa</span>
+            </button>
+            
+            <!-- Botón de Reporte Central Flotante -->
+            <div class="relative -top-6">
+                <button onclick="navigate('report')" class="h-14 w-14 rounded-full bg-water-blue text-white shadow-lg shadow-blue-200 flex items-center justify-center text-2xl transform transition hover:scale-105 hover:bg-water-dark border-4 border-white active:scale-95">
+                    <i class="fa-solid fa-plus"></i>
+                </button>
+            </div>
+
+            <button onclick="navigate('alerts')" id="nav-alerts" class="nav-btn flex flex-col items-center gap-1 w-16 transition-colors relative">
+                <i class="fa-solid fa-bell text-xl nav-icon text-gray-400"></i>
+                <span class="absolute top-0 right-3 flex h-2 w-2">
+                  <span class="relative inline-flex rounded-full h-2 w-2 bg-alert-red"></span>
+                </span>
+                <span class="text-[10px] font-medium nav-text text-gray-400">Alertas</span>
+            </button>
+            <button onclick="navigate('profile')" id="nav-profile" class="nav-btn flex flex-col items-center gap-1 w-16 transition-colors">
+                <i class="fa-solid fa-user text-xl nav-icon text-gray-400"></i>
+                <span class="text-[10px] font-medium nav-text text-gray-400">Perfil</span>
+            </button>
+        </nav>
+
+        <!-- Contenedor para Notificaciones Toast (Simuladas) -->
+        <div id="toast-container" class="absolute top-20 left-1/2 transform -translate-x-1/2 w-11/12 max-w-sm z-50 flex flex-col gap-2 pointer-events-none">
+            <!-- Los toasts se inyectarán aquí -->
+        </div>
+
+    </div>
+
+    <script>
+        // Función de navegación principal
+        function navigate(screenId) {
+            // Manejo especial si se intenta ir a alertas (no implementada pantalla completa, volvemos a home)
+            if(screenId === 'alerts') {
+                showToast("Tienes 2 notificaciones nuevas", "info");
+                screenId = 'home';
+            }
+
+            // 1. Ocultar todas las pantallas
+            document.querySelectorAll('.screen').forEach(screen => {
+                screen.classList.remove('active');
+            });
+
+            // 2. Mostrar la pantalla solicitada
+            const targetScreen = document.getElementById(`screen-${screenId}`);
+            if (targetScreen) {
+                targetScreen.classList.add('active');
+            }
+
+            // 3. Actualizar la barra de navegación
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                // Restablecer estilos
+                const icon = btn.querySelector('.nav-icon');
+                const text = btn.querySelector('.nav-text');
+                if(icon && text) {
+                    icon.classList.remove('text-water-blue');
+                    icon.classList.add('text-gray-400');
+                    text.classList.remove('text-water-blue');
+                    text.classList.add('text-gray-400');
+                }
+            });
+
+            // Activar el botón correspondiente (si existe)
+            const activeBtn = document.getElementById(`nav-${screenId}`);
+            if (activeBtn) {
+                const icon = activeBtn.querySelector('.nav-icon');
+                const text = activeBtn.querySelector('.nav-text');
+                if(icon && text) {
+                    icon.classList.remove('text-gray-400');
+                    icon.classList.add('text-water-blue');
+                    text.classList.remove('text-gray-400');
+                    text.classList.add('text-water-blue');
+                }
+            }
+
+            // Cerrar panel de info del mapa si se sale del mapa
+            if (screenId !== 'map') {
+                closeMarkerInfo();
+            }
+        }
+
+        // Lógica del Panel de Información del Mapa
+        function showMarkerInfo(title, location, type) {
+            const panel = document.getElementById('marker-info-panel');
+            const titleEl = document.getElementById('marker-title');
+            const locEl = document.getElementById('marker-location');
+            const badgeEl = document.getElementById('marker-badge');
+
+            titleEl.textContent = title;
+            locEl.textContent = location;
+
+            // Configurar el badge según el tipo
+            badgeEl.className = 'px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider'; // reset
+            if (type === 'safe') {
+                badgeEl.textContent = 'Seguro';
+                badgeEl.classList.add('bg-green-100', 'text-green-700');
+            } else if (type === 'alert') {
+                badgeEl.textContent = 'Incidencia';
+                badgeEl.classList.add('bg-red-100', 'text-red-700');
+            } else if (type === 'warning') {
+                badgeEl.textContent = 'Aviso';
+                badgeEl.classList.add('bg-yellow-100', 'text-yellow-700');
+            }
+
+            // Mostrar panel (deslizar hacia arriba)
+            panel.style.transform = 'translateY(0)';
+        }
+
+        function closeMarkerInfo() {
+            const panel = document.getElementById('marker-info-panel');
+            if (panel) {
+                panel.style.transform = 'translateY(100%)';
+            }
+        }
+
+        // Cerrar panel si se hace clic fuera (en la zona del mapa)
+        document.querySelector('.map-placeholder').addEventListener('click', function(e) {
+            if (e.target.classList.contains('map-placeholder')) {
+                closeMarkerInfo();
+            }
+        });
+
+        // Simulación de envío de reporte
+        function submitReport(e) {
+            e.preventDefault();
+            
+            // Simular carga
+            const btn = e.target.querySelector('button[type="submit"]');
+            const originalHtml = btn.innerHTML;
+            btn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i> Enviando...';
+            btn.disabled = true;
+
+            setTimeout(() => {
+                // Restaurar botón
+                btn.innerHTML = originalHtml;
+                btn.disabled = false;
+                
+                // Limpiar formulario
+                e.target.reset();
+                
+                // Mostrar éxito y volver a inicio
+                showToast("¡Reporte enviado exitosamente! Gracias por tu aporte.", "success");
+                navigate('home');
+            }, 1500);
+        }
+
+        // Sistema de Notificaciones Toast
+        function showToast(message, type = 'info') {
+            const container = document.getElementById('toast-container');
+            
+            const toast = document.createElement('div');
+            toast.className = `p-4 rounded-xl shadow-lg flex items-center gap-3 transform transition-all duration-300 translate-y-[-20px] opacity-0 pointer-events-auto`;
+            
+            let icon = '';
+            if (type === 'success') {
+                toast.classList.add('bg-green-500', 'text-white');
+                icon = '<i class="fa-solid fa-circle-check text-xl"></i>';
+            } else if (type === 'error') {
+                toast.classList.add('bg-red-500', 'text-white');
+                icon = '<i class="fa-solid fa-circle-exclamation text-xl"></i>';
+            } else {
+                toast.classList.add('bg-gray-800', 'text-white');
+                icon = '<i class="fa-solid fa-circle-info text-xl"></i>';
+            }
+
+            toast.innerHTML = `
+                ${icon}
+                <p class="text-sm font-medium">${message}</p>
+            `;
+
+            container.appendChild(toast);
+
+            // Animar entrada
+            requestAnimationFrame(() => {
+                toast.classList.remove('translate-y-[-20px]', 'opacity-0');
+                toast.classList.add('translate-y-0', 'opacity-100');
+            });
+
+            // Remover después de 3 segundos
+            setTimeout(() => {
+                toast.classList.remove('translate-y-0', 'opacity-100');
+                toast.classList.add('translate-y-[-20px]', 'opacity-0');
+                setTimeout(() => {
+                    toast.remove();
+                }, 300);
+            }, 3000);
+        }
+
+        // Evento para el botón de notificaciones del header
+        document.getElementById('btn-notificaciones').addEventListener('click', () => {
+            showToast("No hay alertas críticas en tu zona en este momento.", "info");
+        });
+
+    </script>
+</body>
+</html>
