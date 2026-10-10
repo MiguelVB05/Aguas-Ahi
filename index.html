@@ -1,0 +1,646 @@
+<!DOCTYPE html>
+<html lang="es" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Transparencia Hídrica - Innovación y Justicia en la Distribución de Agua</title>
+    
+    <!-- Tailwind CSS (Carga mediante CDN para desarrollo) -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts (Inter) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Phosphor Icons -->
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+
+    <!-- Configuración de Tailwind -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            50: '#f0f9ff',
+                            100: '#e0f2fe',
+                            200: '#bae6fd',
+                            300: '#7dd3fc',
+                            400: '#38bdf8',
+                            500: '#0ea5e9',
+                            600: '#0284c7',
+                            700: '#0369a1',
+                            800: '#075985',
+                            900: '#0c4a6e',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <!-- SECCIÓN CSS: Estilos personalizados y utilidades específicas -->
+    <style>
+        /* Base typography */
+        body { 
+            font-family: 'Inter', sans-serif; 
+        }
+
+        /* Utilidad de texto con gradiente */
+        .gradient-text {
+            background: linear-gradient(to right, #0ea5e9, #38bdf8, #2dd4bf);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            color: transparent;
+        }
+
+        /* Estilos personalizados para el Scrollbar */
+        ::-webkit-scrollbar { 
+            width: 8px; 
+        }
+        ::-webkit-scrollbar-track { 
+            background: #f1f1f1; 
+        }
+        ::-webkit-scrollbar-thumb { 
+            background: #0ea5e9; 
+            border-radius: 4px; 
+        }
+        ::-webkit-scrollbar-thumb:hover { 
+            background: #0284c7; 
+        }
+
+        /* Utilidad para el fondo con gradiente radial */
+        .bg-radial-gradient {
+            background: radial-gradient(ellipse at top right, var(--tw-gradient-stops));
+        }
+
+        /* Animación suave para hover de tarjetas de equipo */
+        .team-card-hover {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .team-card-hover:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 antialiased selection:bg-brand-500 selection:text-white">
+
+    <nav class="fixed w-full z-50 bg-white/80 backdrop-blur-md border-b border-slate-200/50 transition-all duration-300">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <!-- Logo -->
+                <div class="flex-shrink-0 flex items-center gap-2 cursor-pointer" onclick="window.scrollTo({top: 0, behavior: 'smooth'})">
+                    <i class="ph-fill ph-drop text-2xl text-brand-500"></i>
+                    <span class="font-bold text-xl tracking-tight text-slate-900">T. Hídrica</span>
+                </div>
+                
+                <!-- Desktop Menu -->
+                <div class="hidden md:flex space-x-8">
+                    <a href="#problema" class="text-slate-600 hover:text-brand-600 font-medium text-sm transition">Problema</a>
+                    <a href="#solucion" class="text-slate-600 hover:text-brand-600 font-medium text-sm transition">Solución</a>
+                    <a href="#ods" class="text-slate-600 hover:text-brand-600 font-medium text-sm transition">ODS</a>
+                    <a href="#negocio" class="text-slate-600 hover:text-brand-600 font-medium text-sm transition">Negocio</a>
+                    <a href="#canvas" class="text-slate-600 hover:text-brand-600 font-medium text-sm transition">Canvas</a>
+                    <a href="#equipo" class="text-slate-600 hover:text-brand-600 font-medium text-sm transition">Equipo</a>
+                </div>
+
+                <!-- Mobile menu button -->
+                <div class="md:hidden flex items-center">
+                    <button id="mobile-menu-btn" class="text-slate-600 hover:text-brand-600 focus:outline-none p-2">
+                        <i class="ph ph-list text-2xl"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mobile Menu -->
+        <div id="mobile-menu" class="hidden md:hidden bg-white border-t border-slate-100">
+            <div class="px-4 pt-2 pb-4 space-y-1 shadow-lg">
+                <a href="#problema" class="block px-3 py-2 rounded-md text-base font-medium text-slate-700 hover:text-brand-600 hover:bg-brand-50 transition">Problema</a>
+                <a href="#solucion" class="block px-3 py-2 rounded-md text-base font-medium text-slate-700 hover:text-brand-600 hover:bg-brand-50 transition">Solución</a>
+                <a href="#ods" class="block px-3 py-2 rounded-md text-base font-medium text-slate-700 hover:text-brand-600 hover:bg-brand-50 transition">ODS</a>
+                <a href="#negocio" class="block px-3 py-2 rounded-md text-base font-medium text-slate-700 hover:text-brand-600 hover:bg-brand-50 transition">Negocio</a>
+                <a href="#canvas" class="block px-3 py-2 rounded-md text-base font-medium text-slate-700 hover:text-brand-600 hover:bg-brand-50 transition">Canvas</a>
+                <a href="#equipo" class="block px-3 py-2 rounded-md text-base font-medium text-slate-700 hover:text-brand-600 hover:bg-brand-50 transition">Equipo</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- SECCIÓN HTML: Estructura de la página -->
+    <section class="relative pt-32 pb-20 lg:pt-40 lg:pb-28 overflow-hidden">
+        <div class="absolute inset-y-0 w-full h-full -z-10 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-brand-100 via-slate-50 to-white"></div>
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative text-center">
+            <span class="inline-block py-1 px-3 rounded-full bg-brand-100 text-brand-800 text-sm font-semibold tracking-wide mb-4 border border-brand-200">
+                Marketplace de Infraestructura Cívica
+            </span>
+            <h1 class="text-4xl md:text-6xl font-extrabold tracking-tight text-slate-900 mb-6">
+                El fin de los abusos.<br>
+                <span class="gradient-text">Agua justa y transparente.</span>
+            </h1>
+            <p class="mt-4 text-xl text-slate-600 max-w-3xl mx-auto mb-10 leading-relaxed">
+                Plataforma digital que optimiza la logística de reparto de agua, audita la compra y permite adquisiciones colectivas barriales, garantizando transacciones seguras mediante depósitos en garantía (escrow) y validación criptográfica.
+            </p>
+            <div class="flex flex-col sm:flex-row justify-center gap-4">
+                <a href="#solucion" class="px-8 py-4 bg-brand-600 text-white rounded-xl font-semibold hover:bg-brand-700 transition shadow-lg shadow-brand-500/30 flex items-center justify-center gap-2">
+                    Conoce la solución <i class="ph ph-arrow-right"></i>
+                </a>
+                <a href="#negocio" class="px-8 py-4 bg-white text-slate-700 border border-slate-200 rounded-xl font-semibold hover:bg-slate-50 transition flex items-center justify-center gap-2">
+                    Ver Plan de Negocios
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <section id="problema" class="py-20 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl font-bold text-slate-900 sm:text-4xl">La Crisis Actual del Mercado de Agua</h2>
+                <p class="mt-4 text-lg text-slate-600 max-w-2xl mx-auto">El desabasto urbano ha creado un mercado negro de pipas donde la opacidad y los abusos son la norma diaria.</p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="bg-slate-50 rounded-2xl p-8 border border-slate-100 shadow-sm hover:shadow-md transition">
+                    <div class="w-14 h-14 bg-red-100 text-red-600 rounded-xl flex items-center justify-center text-3xl mb-6">
+                        <i class="ph-fill ph-trend-up"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-slate-900 mb-3">Sobreprecios Arbitrarios</h3>
+                    <p class="text-slate-600 leading-relaxed">Las prácticas abusivas en el mercado privado de camiones cisterna imponen precios que cambian según la urgencia y vulnerabilidad del vecino, sin regulación alguna.</p>
+                </div>
+                <div class="bg-slate-50 rounded-2xl p-8 border border-slate-100 shadow-sm hover:shadow-md transition">
+                    <div class="w-14 h-14 bg-orange-100 text-orange-600 rounded-xl flex items-center justify-center text-3xl mb-6">
+                        <i class="ph-fill ph-drop-half-bottom"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-slate-900 mb-3">Opacidad e Incompletitud</h3>
+                    <p class="text-slate-600 leading-relaxed">Cobros incompletos (se paga por 10,000 litros y se entregan 8,000) y nula garantía o transparencia en la calidad real del agua suministrada.</p>
+                </div>
+                <div class="bg-slate-50 rounded-2xl p-8 border border-slate-100 shadow-sm hover:shadow-md transition">
+                    <div class="w-14 h-14 bg-slate-200 text-slate-700 rounded-xl flex items-center justify-center text-3xl mb-6">
+                        <i class="ph-fill ph-money"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-slate-900 mb-3">Riesgo en Pagos (Efectivo)</h3>
+                    <p class="text-slate-600 leading-relaxed">El pago en efectivo facilita el fraude, el asalto a conductores y deja al consumidor sin ningún recurso para reclamar si el servicio no se presta adecuadamente.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="solucion" class="py-20 bg-slate-900 text-white relative overflow-hidden">
+        <div class="absolute -top-24 -right-24 w-96 h-96 bg-brand-500 rounded-full mix-blend-multiply filter blur-3xl opacity-20"></div>
+        <div class="absolute -bottom-24 -left-24 w-96 h-96 bg-teal-500 rounded-full mix-blend-multiply filter blur-3xl opacity-20"></div>
+        
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            <div class="lg:grid lg:grid-cols-2 lg:gap-16 items-center">
+                <div>
+                    <h2 class="text-3xl font-bold sm:text-4xl mb-6">Nuestra Solución: Tecnología para la Equidad</h2>
+                    <p class="text-slate-300 text-lg mb-8 leading-relaxed">
+                        Rediseñamos la compra de agua mediante un modelo de economía colaborativa y alta seguridad criptográfica. Una plataforma web y app móvil para erradicar el abuso.
+                    </p>
+                    
+                    <ul class="space-y-8">
+                        <li class="flex gap-4">
+                            <div class="flex-shrink-0 w-12 h-12 rounded-full bg-brand-500/20 flex items-center justify-center text-brand-400 text-2xl border border-brand-500/30">
+                                <i class="ph-fill ph-users-three"></i>
+                            </div>
+                            <div>
+                                <h4 class="text-xl font-semibold mb-1">Pool Vecinal (Compra Colectiva)</h4>
+                                <p class="text-slate-400">Permite que varios hogares compartan el flete de una misma pipa, reduciendo el costo por litro hasta en un <strong class="text-white">40%</strong> mediante inteligencia de enrutamiento.</p>
+                            </div>
+                        </li>
+                        <li class="flex gap-4">
+                            <div class="flex-shrink-0 w-12 h-12 rounded-full bg-brand-500/20 flex items-center justify-center text-brand-400 text-2xl border border-brand-500/30">
+                                <i class="ph-fill ph-lock-key"></i>
+                            </div>
+                            <div>
+                                <h4 class="text-xl font-semibold mb-1">Depósito en Garantía (Escrow)</h4>
+                                <p class="text-slate-400">Los pagos no se entregan en efectivo. Se retienen digitalmente de forma segura y solo se liberan cuando el servicio se completa a satisfacción.</p>
+                            </div>
+                        </li>
+                        <li class="flex gap-4">
+                            <div class="flex-shrink-0 w-12 h-12 rounded-full bg-brand-500/20 flex items-center justify-center text-brand-400 text-2xl border border-brand-500/30">
+                                <i class="ph-fill ph-qr-code"></i>
+                            </div>
+                            <div>
+                                <h4 class="text-xl font-semibold mb-1">Validación Criptográfica y Geolocalización</h4>
+                                <p class="text-slate-400">Liberación de pagos vinculada a la validación física de la descarga mediante códigos QR dinámicos con firma <strong class="text-brand-300">HMAC-SHA256</strong> y GPS en tiempo real para evitar suplantaciones.</p>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+                
+                <div class="mt-16 lg:mt-0 relative">
+                    <!-- Mockup visual representativo -->
+                    <div class="bg-slate-800 rounded-2xl border border-slate-700 shadow-2xl p-6 relative overflow-hidden">
+                        <div class="absolute top-0 right-0 p-4 opacity-10">
+                            <i class="ph-fill ph-shield-check text-9xl"></i>
+                        </div>
+                        <div class="flex items-center justify-between border-b border-slate-700 pb-4 mb-4">
+                            <div class="font-semibold text-lg text-white">Transacción #A92-B</div>
+                            <span class="bg-yellow-500/20 text-yellow-400 text-xs px-2 py-1 rounded-full border border-yellow-500/30">Fondos en Escrow</span>
+                        </div>
+                        <div class="space-y-4 relative z-10">
+                            <div class="flex justify-between items-center text-sm">
+                                <span class="text-slate-400">Volumen Total</span>
+                                <span class="font-mono text-white">10,000 Litros</span>
+                            </div>
+                            <div class="flex justify-between items-center text-sm">
+                                <span class="text-slate-400">Participantes (Pool)</span>
+                                <span class="font-mono text-white">4 Hogares</span>
+                            </div>
+                            <div class="flex justify-between items-center text-sm">
+                                <span class="text-slate-400">Costo Total</span>
+                                <span class="font-mono text-brand-400 font-bold">$800 MXN</span>
+                            </div>
+                            <div class="mt-6 p-4 bg-slate-900 rounded-xl border border-slate-700 text-center">
+                                <div class="w-32 h-32 mx-auto bg-white p-2 rounded-lg mb-3">
+                                    <!-- Simulación de QR -->
+                                    <svg viewBox="0 0 100 100" class="w-full h-full text-black"><path d="M0,0 h30 v30 h-30 z m10,10 v10 h10 v-10 z" fill="currentColor"/><path d="M70,0 h30 v30 h-30 z m10,10 v10 h10 v-10 z" fill="currentColor"/><path d="M0,70 h30 v30 h-30 z m10,10 v10 h10 v-10 z" fill="currentColor"/><rect x="40" y="10" width="20" height="10" fill="currentColor"/><rect x="10" y="40" width="10" height="20" fill="currentColor"/><rect x="40" y="40" width="50" height="50" fill="currentColor"/></svg>
+                                </div>
+                                <p class="text-xs text-slate-400 mb-1">Escanea para liberar pago</p>
+                                <p class="text-[10px] text-brand-300 font-mono break-all">HMAC: 3f9a...8b2e (Validando GPS...)</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="ods" class="py-20 bg-brand-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl font-bold text-slate-900 sm:text-4xl">Impacto Directo en los ODS</h2>
+                <p class="mt-4 text-lg text-slate-600 max-w-2xl mx-auto">Transparencia Hídrica está alineada con los Objetivos de Desarrollo Sostenible de la ONU.</p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <!-- ODS 6 -->
+                <div class="bg-white rounded-2xl p-6 shadow-md border-t-4 border-[#26BDE2]">
+                    <div class="flex items-center gap-4 mb-4">
+                        <div class="w-16 h-16 bg-[#26BDE2] text-white flex items-center justify-center font-bold text-2xl rounded-lg">6</div>
+                        <h3 class="font-bold text-slate-900 text-lg leading-tight">Agua Limpia y Saneamiento</h3>
+                    </div>
+                    <p class="text-slate-600 text-sm">Aseguramos el acceso equitativo y asequible al agua potable mediante la optimización logística, reduciendo el desabasto artificial y garantizando la trazabilidad en la calidad del agua entregada a las comunidades.</p>
+                </div>
+                
+                <!-- ODS 10 -->
+                <div class="bg-white rounded-2xl p-6 shadow-md border-t-4 border-[#DD1367]">
+                    <div class="flex items-center gap-4 mb-4">
+                        <div class="w-16 h-16 bg-[#DD1367] text-white flex items-center justify-center font-bold text-2xl rounded-lg">10</div>
+                        <h3 class="font-bold text-slate-900 text-lg leading-tight">Reducción de las Desigualdades</h3>
+                    </div>
+                    <p class="text-slate-600 text-sm">El "pool vecinal" democratiza los precios mayoristas para familias de bajos ingresos, eliminando el "impuesto de pobreza" donde las familias vulnerables pagan hasta 5 veces más por litro que en zonas conectadas a la red pública.</p>
+                </div>
+
+                <!-- ODS 16 -->
+                <div class="bg-white rounded-2xl p-6 shadow-md border-t-4 border-[#00689D]">
+                    <div class="flex items-center gap-4 mb-4">
+                        <div class="w-16 h-16 bg-[#00689D] text-white flex items-center justify-center font-bold text-2xl rounded-lg">16</div>
+                        <h3 class="font-bold text-slate-900 text-lg leading-tight">Paz, Justicia e Inst. Sólidas</h3>
+                    </div>
+                    <p class="text-slate-600 text-sm">Erradicamos la corrupción y las prácticas predatorias en la venta de agua mediante contratos inteligentes, pagos auditables en Escrow y validación criptográfica, devolviendo el Estado de Derecho a un mercado gris.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="negocio" class="py-20 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="mb-12">
+                <h2 class="text-3xl font-bold text-slate-900 sm:text-4xl mb-4">Plan de Negocios a Profundidad</h2>
+                <p class="text-lg text-slate-600">Nuestro modelo se basa en transformar un mercado informal en uno eficiente, seguro y altamente escalable, generando valor tanto para usuarios como para transportistas.</p>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
+                <div class="space-y-8">
+                    <!-- Análisis de Mercado -->
+                    <div>
+                        <div class="flex items-center gap-3 mb-3">
+                            <i class="ph-fill ph-chart-line-up text-2xl text-brand-600"></i>
+                            <h3 class="text-2xl font-bold text-slate-900">Análisis de Mercado</h3>
+                        </div>
+                        <p class="text-slate-600 mb-2">El mercado de distribución de agua en camiones cisterna en América Latina mueve miles de millones de dólares anuales en el sector informal. Debido al estrés hídrico y fallas en la red pública (que afecta al 30% de la población urbana en México), la demanda es inelástica y constante.</p>
+                        <p class="text-slate-600"><strong>El problema del proveedor:</strong> Rutas ineficientes, camiones regresando vacíos, riesgo de asaltos al manejar efectivo e incapacidad de predecir la demanda.</p>
+                    </div>
+
+                    <!-- Modelo Financiero -->
+                    <div>
+                        <div class="flex items-center gap-3 mb-3">
+                            <i class="ph-fill ph-coins text-2xl text-brand-600"></i>
+                            <h3 class="text-2xl font-bold text-slate-900">Modelo Financiero (Monetización)</h3>
+                        </div>
+                        <ul class="space-y-3 text-slate-600">
+                            <li class="flex gap-2 items-start"><i class="ph-fill ph-check-circle text-green-500 mt-1"></i> <span><strong>Comisión por Transacción (Escrow Fee):</strong> Cobro de un 3% a 5% del valor total del flete gestionado a través de la plataforma, pagado por el proveedor de la pipa a cambio de garantizar el cobro y optimizar su ruta.</span></li>
+                            <li class="flex gap-2 items-start"><i class="ph-fill ph-check-circle text-green-500 mt-1"></i> <span><strong>SaaS para Flotillas:</strong> Suscripción mensual para dueños de múltiples pipas por acceso a dashboards de telemetría, inteligencia de rutas, prevención de mermas y auditoría de sus choferes.</span></li>
+                            <li class="flex gap-2 items-start"><i class="ph-fill ph-check-circle text-green-500 mt-1"></i> <span><strong>Microfinanzas B2B (Futuro):</strong> Historial crediticio transparente para que los transportistas puedan acceder a créditos para renovación de unidades.</span></li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="space-y-8">
+                    <!-- Viabilidad y Prorrateo -->
+                    <div class="bg-slate-50 p-6 rounded-2xl border border-slate-200">
+                        <div class="flex items-center gap-3 mb-3">
+                            <i class="ph-fill ph-calculator text-2xl text-brand-600"></i>
+                            <h3 class="text-xl font-bold text-slate-900">Inteligencia Financiera: Prorrateo y Amortización</h3>
+                        </div>
+                        <p class="text-slate-600 text-sm mb-3">El éxito del <em>Pool Vecinal</em> radica en nuestro algoritmo dinámico de prorrateo. Si una pipa de 10,000L cuesta $1,000 MXN, tradicionalmente una familia que solo necesita 2,500L tendría que pagar el viaje completo o quedarse sin agua.</p>
+                        <p class="text-slate-600 text-sm">Nuestro modelo consolida órdenes cercanas espacial y temporalmente. El algoritmo divide el costo del flete (costo base) más el volumen de agua de manera proporcional. El sistema amortiza los costos de logística (gasolina, tiempo del chofer) entre 4 vecinos, logrando ahorros del 40% por hogar, mientras que el proveedor vende todo el volumen en una sola zona, aumentando su rotación diaria (viajes por día).</p>
+                    </div>
+
+                    <!-- Estrategia de Ciberseguridad -->
+                    <div class="bg-brand-900 text-white p-6 rounded-2xl border border-brand-800 shadow-lg">
+                        <div class="flex items-center gap-3 mb-3">
+                            <i class="ph-fill ph-shield-star text-2xl text-brand-400"></i>
+                            <h3 class="text-xl font-bold">Ciberseguridad y Prevención de Fraude</h3>
+                        </div>
+                        <p class="text-brand-100 text-sm mb-3">La adopción depende de la confianza. Implementamos un SDLC (Software Development Life Cycle) seguro para prevenir ataques a la pasarela de pagos.</p>
+                        <ul class="text-sm text-brand-200 space-y-2">
+                            <li>• <strong>Prevención de Suplantación:</strong> Autenticación multifactor para choferes.</li>
+                            <li>• <strong>Integridad Transaccional:</strong> Códigos QR dinámicos que caducan cada 30 segundos, firmados con HMAC-SHA256, atados criptográficamente a las coordenadas GPS del domicilio. Imposibles de fotografiar y usar después.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="canvas" class="py-20 bg-slate-100 border-y border-slate-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-bold text-slate-900 sm:text-4xl">Modelo de Negocios Canvas</h2>
+                <p class="mt-4 text-lg text-slate-600 max-w-2xl mx-auto">La estructura lógica de cómo creamos, entregamos y capturamos valor.</p>
+            </div>
+
+            <!-- CSS Grid for Canvas layout -->
+            <div class="grid grid-cols-1 md:grid-cols-5 gap-4">
+                
+                <!-- Key Partnerships (Span 1 col, 2 rows) -->
+                <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm md:row-span-2">
+                    <h3 class="font-bold text-slate-800 mb-3 flex items-center gap-2"><i class="ph-fill ph-handshake text-brand-600"></i> Socios Clave</h3>
+                    <ul class="text-sm text-slate-600 space-y-2">
+                        <li>- Juntas vecinales y líderes comunitarios.</li>
+                        <li>- Pasarelas de pago (Stripe, MercadoPago).</li>
+                        <li>- Sindicatos y agrupaciones de transportistas (pipas).</li>
+                        <li>- Organismos reguladores de agua municipales (Conagua).</li>
+                    </ul>
+                </div>
+
+                <!-- Key Activities (Span 1 col, 1 row) -->
+                <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
+                    <h3 class="font-bold text-slate-800 mb-3 flex items-center gap-2"><i class="ph-fill ph-gear text-brand-600"></i> Actividades Clave</h3>
+                    <ul class="text-sm text-slate-600 space-y-2">
+                        <li>- Mantenimiento y seguridad de la plataforma.</li>
+                        <li>- Verificación y onboarding de pipas/choferes.</li>
+                        <li>- Algoritmos de enrutamiento y prorrateo.</li>
+                        <li>- Marketing de adopción comunitaria.</li>
+                    </ul>
+                </div>
+
+                <!-- Value Propositions (Span 1 col, 2 rows) -->
+                <div class="bg-brand-600 text-white p-5 rounded-xl border border-brand-500 shadow-md md:row-span-2 flex flex-col justify-center">
+                    <h3 class="font-bold mb-3 flex items-center gap-2"><i class="ph-fill ph-gift text-brand-200"></i> Propuesta de Valor</h3>
+                    <p class="text-sm text-brand-100 font-semibold mb-1">Para el Vecino:</p>
+                    <ul class="text-sm text-white space-y-1 mb-4 list-disc pl-4">
+                        <li>Agua hasta 40% más barata (Pool).</li>
+                        <li>Pago seguro protegido por Escrow.</li>
+                        <li>Garantía de volumen exacto entregado.</li>
+                    </ul>
+                    <p class="text-sm text-brand-100 font-semibold mb-1">Para el Pipiero:</p>
+                    <ul class="text-sm text-white space-y-1 list-disc pl-4">
+                        <li>Menos tiempo muerto (rutas eficientes).</li>
+                        <li>Cero riesgo de asaltos (sin efectivo).</li>
+                        <li>Demanda concentrada en una misma cuadra.</li>
+                    </ul>
+                </div>
+
+                <!-- Customer Relationships (Span 1 col, 1 row) -->
+                <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
+                    <h3 class="font-bold text-slate-800 mb-3 flex items-center gap-2"><i class="ph-fill ph-heart text-brand-600"></i> Relación c/Clientes</h3>
+                    <ul class="text-sm text-slate-600 space-y-2">
+                        <li>- Soporte automatizado en app (resolución de disputas).</li>
+                        <li>- Transparencia total y sistema de calificaciones (Reviews).</li>
+                        <li>- Enfoque comunitario y de confianza mutua.</li>
+                    </ul>
+                </div>
+
+                <!-- Customer Segments (Span 1 col, 2 rows) -->
+                <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm md:row-span-2">
+                    <h3 class="font-bold text-slate-800 mb-3 flex items-center gap-2"><i class="ph-fill ph-users text-brand-600"></i> Segmentos</h3>
+                    <p class="text-sm font-semibold text-slate-700 mt-2">B2C (Consumidores):</p>
+                    <ul class="text-sm text-slate-600 space-y-1 mb-3">
+                        <li>Hogares en periferias y zonas con tandeos o desabasto crónico.</li>
+                    </ul>
+                    <p class="text-sm font-semibold text-slate-700">B2B (Proveedores):</p>
+                    <ul class="text-sm text-slate-600 space-y-1">
+                        <li>Dueños independientes de pipas de agua.</li>
+                        <li>Flotillas medianas de camiones cisterna.</li>
+                    </ul>
+                </div>
+
+                <!-- Key Resources (Span 1 col, 1 row) -->
+                <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
+                    <h3 class="font-bold text-slate-800 mb-3 flex items-center gap-2"><i class="ph-fill ph-database text-brand-600"></i> Recursos Clave</h3>
+                    <ul class="text-sm text-slate-600 space-y-2">
+                        <li>- Infraestructura Cloud y Criptografía.</li>
+                        <li>- Algoritmo de ruteo y finanzas.</li>
+                        <li>- Talento humano (Desarrollo, Finanzas, Diseño).</li>
+                    </ul>
+                </div>
+
+                <!-- Channels (Span 1 col, 1 row) -->
+                <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
+                    <h3 class="font-bold text-slate-800 mb-3 flex items-center gap-2"><i class="ph-fill ph-truck text-brand-600"></i> Canales</h3>
+                    <ul class="text-sm text-slate-600 space-y-2">
+                        <li>- App Móvil (iOS/Android).</li>
+                        <li>- Portal Web.</li>
+                        <li>- Grupos de WhatsApp vecinales.</li>
+                        <li>- Publicidad en zonas de carga de agua (pozos).</li>
+                    </ul>
+                </div>
+
+                <!-- Cost Structure (Span 2.5 cols aprox -> In Grid we use 2 cols for structure, 3 for revenue) -->
+                <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm md:col-span-2 mt-4">
+                    <h3 class="font-bold text-slate-800 mb-3 flex items-center gap-2"><i class="ph-fill ph-receipt text-brand-600"></i> Estructura de Costos</h3>
+                    <ul class="text-sm text-slate-600 space-y-2">
+                        <li>- Desarrollo y mantenimiento del software (SDLC).</li>
+                        <li>- Costos de servidores (Cloud, bases de datos).</li>
+                        <li>- APIs (Mapas, Geocoding, Pasarelas de pago, SMS).</li>
+                        <li>- Campañas de adopción (Marketing).</li>
+                        <li>- Sueldos (Ciberseguridad, Finanzas, UX/UI).</li>
+                    </ul>
+                </div>
+
+                <!-- Revenue Streams (Span 3 cols) -->
+                <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm md:col-span-3 mt-4">
+                    <h3 class="font-bold text-slate-800 mb-3 flex items-center gap-2"><i class="ph-fill ph-money text-brand-600"></i> Flujos de Ingreso</h3>
+                    <ul class="text-sm text-slate-600 space-y-2">
+                        <li>- <strong>Transaction Fee:</strong> Comisión porcentual (3-5%) por viaje intermediado y protegido en Escrow.</li>
+                        <li>- <strong>Suscripción B2B (Flotillas):</strong> Cobro mensual (SaaS) a dueños de múltiples pipas por software de gestión y analítica.</li>
+                        <li>- <strong>Monetización financiera:</strong> Intereses generados temporalmente por el volumen de efectivo flotante en el sistema Escrow (regulaciones aplicables).</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="equipo" class="py-20 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl font-bold text-slate-900 sm:text-4xl">Equipo Fundador</h2>
+                <p class="mt-4 text-lg text-slate-600 max-w-2xl mx-auto">Un equipo multidisciplinario enfocado en resolver un problema crítico combinando diseño, finanzas y máxima seguridad informática.</p>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+                <!-- Erik -->
+                <div class="bg-slate-50 rounded-2xl p-6 border border-slate-100 text-center hover:-translate-y-2 transition-transform duration-300">
+                    <div class="w-24 h-24 mx-auto bg-brand-100 text-brand-600 rounded-full flex items-center justify-center text-4xl mb-4">
+                        <i class="ph-fill ph-paint-brush-broad"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-slate-900">Erik</h3>
+                    <p class="text-brand-600 font-medium text-sm mb-3">Creatividad Digital</p>
+                    <p class="text-slate-500 text-sm">Especialista en UX/UI y campañas de adopción. Encargado de diseñar interfaces altamente accesibles para que cualquier vecino o chofer pueda usar la app sin fricciones.</p>
+                </div>
+
+                <!-- Victor -->
+                <div class="bg-slate-50 rounded-2xl p-6 border border-slate-100 text-center hover:-translate-y-2 transition-transform duration-300">
+                    <div class="w-24 h-24 mx-auto bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center text-4xl mb-4">
+                        <i class="ph-fill ph-chart-bar"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-slate-900">Victor</h3>
+                    <p class="text-emerald-600 font-medium text-sm mb-3">Inteligencia Financiera</p>
+                    <p class="text-slate-500 text-sm">Creador de los modelos de prorrateo y amortización. Evalúa la viabilidad económica del pool vecinal y la estructura de comisiones del escrow.</p>
+                </div>
+
+                <!-- Angel -->
+                <div class="bg-slate-50 rounded-2xl p-6 border border-slate-100 text-center hover:-translate-y-2 transition-transform duration-300">
+                    <div class="w-24 h-24 mx-auto bg-slate-800 text-slate-200 rounded-full flex items-center justify-center text-4xl mb-4">
+                        <i class="ph-fill ph-lock-key"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-slate-900">Angel</h3>
+                    <p class="text-slate-600 font-medium text-sm mb-3">Ciberseguridad</p>
+                    <p class="text-slate-500 text-sm">Garantiza la integridad de las transacciones. Implementa la arquitectura criptográfica (HMAC-SHA256) en los códigos QR para evitar fraudes en campo.</p>
+                </div>
+
+                <!-- Miguel -->
+                <div class="bg-slate-50 rounded-2xl p-6 border border-slate-100 text-center hover:-translate-y-2 transition-transform duration-300">
+                    <div class="w-24 h-24 mx-auto bg-slate-800 text-slate-200 rounded-full flex items-center justify-center text-4xl mb-4">
+                        <i class="ph-fill ph-shield-check"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-slate-900">Miguel</h3>
+                    <p class="text-slate-600 font-medium text-sm mb-3">Ciberseguridad</p>
+                    <p class="text-slate-500 text-sm">Lidera el desarrollo de software seguro (DevSecOps) y las medidas contra la suplantación de identidad de transportistas y validación de GPS.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="bg-slate-900 text-slate-400 py-12 border-t border-slate-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-col md:flex-row justify-between items-center gap-6">
+                <div class="flex items-center gap-2">
+                    <i class="ph-fill ph-drop text-2xl text-brand-500"></i>
+                    <span class="font-bold text-xl tracking-tight text-white">Transparencia Hídrica</span>
+                </div>
+                <div class="flex space-x-6">
+                    <a href="#" class="hover:text-white transition"><i class="ph-fill ph-twitter-logo text-2xl"></i></a>
+                    <a href="#" class="hover:text-white transition"><i class="ph-fill ph-linkedin-logo text-2xl"></i></a>
+                    <a href="#" class="hover:text-white transition"><i class="ph-fill ph-github-logo text-2xl"></i></a>
+                </div>
+            </div>
+            <div class="mt-8 pt-8 border-t border-slate-800 text-sm text-center md:text-left flex flex-col md:flex-row justify-between">
+                <p>&copy; 2026 Transparencia Hídrica. Todos los derechos reservados.</p>
+                <p class="mt-2 md:mt-0">Construido para un futuro con agua justa.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- SECCIÓN JAVASCRIPT: Lógica de la aplicación -->
+    <script>
+        // DOM Elements
+        const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+        const mobileMenu = document.getElementById('mobile-menu');
+        const mobileMenuLinks = mobileMenu ? mobileMenu.querySelectorAll('a') : [];
+        const navbar = document.querySelector('nav');
+
+        // Funciones de inicialización
+        function initApp() {
+            if (mobileMenuBtn && mobileMenu) {
+                setupMobileMenu();
+            }
+            if (navbar) {
+                setupNavbarScrollEffect();
+            }
+            setupSmoothScrolling();
+        }
+
+        // Lógica del menú móvil
+        function setupMobileMenu() {
+            // Toggle menú
+            mobileMenuBtn.addEventListener('click', () => {
+                mobileMenu.classList.toggle('hidden');
+                
+                // Cambiar el icono (hamburguesa a X opcional)
+                const icon = mobileMenuBtn.querySelector('i');
+                if(mobileMenu.classList.contains('hidden')){
+                    icon.classList.remove('ph-x');
+                    icon.classList.add('ph-list');
+                } else {
+                    icon.classList.remove('ph-list');
+                    icon.classList.add('ph-x');
+                }
+            });
+
+            // Cerrar menú al hacer clic en un enlace
+            mobileMenuLinks.forEach(link => {
+                link.addEventListener('click', () => {
+                    mobileMenu.classList.add('hidden');
+                    const icon = mobileMenuBtn.querySelector('i');
+                    icon.classList.remove('ph-x');
+                    icon.classList.add('ph-list');
+                });
+            });
+        }
+
+        // Efecto visual de la barra de navegación al hacer scroll
+        function setupNavbarScrollEffect() {
+            window.addEventListener('scroll', () => {
+                if (window.scrollY > 20) {
+                    navbar.classList.add('shadow-md', 'bg-white/95');
+                    navbar.classList.remove('bg-white/80');
+                } else {
+                    navbar.classList.remove('shadow-md', 'bg-white/95');
+                    navbar.classList.add('bg-white/80');
+                }
+            });
+        }
+
+        // Scroll suave para navegadores que no soportan la clase css scroll-smooth completamente
+        function setupSmoothScrolling() {
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    const targetId = this.getAttribute('href');
+                    if(targetId === '#') return;
+                    
+                    const targetElement = document.querySelector(targetId);
+                    if(targetElement) {
+                        targetElement.scrollIntoView({
+                            behavior: 'smooth',
+                            block: 'start'
+                        });
+                    }
+                });
+            });
+        }
+
+        // Ejecutar inicialización cuando el DOM esté listo
+        document.addEventListener('DOMContentLoaded', initApp);
+    </script>
+</body>
+</html>
